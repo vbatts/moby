@@ -643,6 +643,20 @@ func (c *containerRouter) postContainersCreate(ctx context.Context, w http.Respo
 		}
 	}
 
+	if versions.LessThan(version, "1.48") {
+		for _, opt := range hostConfig.SecurityOpt {
+			if strings.Contains(opt, "=") {
+				k, _, ok := strings.Cut(opt, "=")
+				if !ok {
+					return errdefs.InvalidParameter(errors.Errorf("HostConfig.SecurityOpt parameter is not well formed: %q", opt))
+				}
+				if k == "writable-cgroups" {
+					return errdefs.InvalidParameter(errors.New("HostConfig.SecurityOpt of 'writable-cgroups' needs API v1.48 or newer"))
+				}
+			}
+		}
+	}
+
 	var warnings []string
 	if warn := handleVolumeDriverBC(version, hostConfig); warn != "" {
 		warnings = append(warnings, warn)

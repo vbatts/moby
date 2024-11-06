@@ -34,6 +34,9 @@ keywords: "API, Docker, rcli, REST, documentation"
   and will be omitted in API v1.49.
 * `Sysctls` in `HostConfig` (top level `--sysctl` settings) for `eth0` are
   no longer migrated to `DriverOpts`, as described in the changes for v1.46.
+* `POST /containers/create` now accepts a `writable-cgroups=true` option in 
+  `HostConfig.SecurityOpt` to mount the container's cgroups writable. This
+  provides a more granular approach than `HostConfig.Privileged`.
 
 ## v1.47 API changes
 
